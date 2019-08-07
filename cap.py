@@ -43,14 +43,13 @@ def grab_images(cam, num_images_to_grab):
             print('Timestamp [ %d %d ] - %d' % (ts.cycleSeconds, ts.cycleCount, diff))
         prev_ts = ts
 
-    row_bytes = float(len(image.getData()))/float(image.getRows());
-    cv_image = np.array(image.getData(), dtype="uint8").reshape( (image.getRows(), image.getCols()) );
-    cv2.imshow('frame',cv_image)
+    image.save('tmp.bmp'.encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
+    data = cv2.imread('tmp.bmp',0)
+    cv2.imshow('img',data)
 
-    newimg = image.convert(PyCapture2.PIXEL_FORMAT.BGR)
-    print('Saving the last image to fc2TestImage.png')
-    newimg.save('now.png'.encode('utf-8'), PyCapture2.IMAGE_FILE_FORMAT.PNG)
-
+    #newimg = image.convert(PyCapture2.PIXEL_FORMAT.BGR)
+    #print('Saving the last image to fc2TestImage.png')
+    #newimg.save('now.png'.encode('utf-8'), PyCapture2.IMAGE_FILE_FORMAT.PNG)
 #
 # Example Main
 #
@@ -77,7 +76,13 @@ enable_embedded_timestamp(c, True)
 
 print('Starting image capture...')
 c.startCapture()
-grab_images(c, 1)
+while 1:
+    grab_images(c, 1)
+    k = cv2.waitKey(30) & 0xff
+    if k == 27:
+        break
+
+    
 c.stopCapture()
 
 # Disable camera embedded timestamp
