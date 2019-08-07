@@ -47,7 +47,6 @@ def enable_embedded_timestamp(cam, enable_timestamp):
 def grab_images(cam, num_images_to_grab):
     prev_ts = None
     fgbg = cv2.createBackgroundSubtractorMOG2()
-    savePath = ''
     for i in range(num_images_to_grab):
         try:
             image = cam.retrieveBuffer()
@@ -57,8 +56,8 @@ def grab_images(cam, num_images_to_grab):
         
         ts = image.getTimeStamp()
 
-        image.save('tmp.bmp'.encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
-        img = cv2.imread('tmp.bmp',0)
+        image.save('/vanaramdisk/tmp.bmp'.encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
+        img = cv2.imread('/vanaramdisk/tmp.bmp',0)
         fgmask = fgbg.apply(img)
         count = cv2.countNonZero(fgmask)
 
@@ -67,16 +66,17 @@ def grab_images(cam, num_images_to_grab):
         #cv2.imshow('innertube',img)
         #cv2.imshow('fgmask',fgmask)
 
-        prev_ts = ts
         filename = ''  
         if count > 2000:
             filename ='{:04d}-{:04d}-{}'.format(ts.cycleSeconds, ts.cycleCount,count)
-            image.save('{}.bmp'.format(filename).encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
+            image.save('/vanaramdisk/{}.bmp'.format(filename).encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
             
-
         if prev_ts:
             diff = (ts.cycleSeconds - prev_ts.cycleSeconds) * 8000 + (ts.cycleCount - prev_ts.cycleCount)
             print('Timestamp [ {:04d} {:04d} ] - {:03d} - {} {}'.format(ts.cycleSeconds, ts.cycleCount, diff,count,filename))
+
+        prev_ts = ts
+
 
 
 #
