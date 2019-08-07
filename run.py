@@ -47,7 +47,15 @@ def enable_embedded_timestamp(cam, enable_timestamp):
 def grab_images(cam, num_images_to_grab):
     prev_ts = None
     fgbg = cv2.createBackgroundSubtractorMOG2()
-    for i in range(num_images_to_grab):
+    #for i in range(num_images_to_grab):
+
+    i = 0
+    startAt = 100
+    while 1:
+        i=i+1
+        if i > startAt:
+            i=startAt+1
+
         try:
             image = cam.retrieveBuffer()
         except PyCapture2.Fc2error as fc2Err:
@@ -67,7 +75,7 @@ def grab_images(cam, num_images_to_grab):
         #cv2.imshow('fgmask',fgmask)
 
         filename = ''  
-        if count > 2000:
+        if (count > 2000) & (i > startAt) :
             filename ='{:04d}-{:04d}-{}'.format(ts.cycleSeconds, ts.cycleCount,count)
             image.save('/vanaramdisk/{}.bmp'.format(filename).encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
             
