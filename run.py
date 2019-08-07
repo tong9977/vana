@@ -16,6 +16,7 @@
 #=============================================================================
 
 import PyCapture2
+import cv2
 
 def print_build_info():
     lib_ver = PyCapture2.getLibraryVersion()
@@ -45,22 +46,38 @@ def enable_embedded_timestamp(cam, enable_timestamp):
 
 def grab_images(cam, num_images_to_grab):
     prev_ts = None
+    fgbg = cv2.createBackgroundSubtractorMOG2()
+    savePath = ''
     for i in range(num_images_to_grab):
         try:
             image = cam.retrieveBuffer()
         except PyCapture2.Fc2error as fc2Err:
             print('Error retrieving buffer : %s' % fc2Err)
             continue
-
+        
         ts = image.getTimeStamp()
+
+        image.save('tmp.bmp'.encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
+        img = cv2.imread('tmp.bmp',0)
+        fgmask = fgbg.apply(img)
+        count = cv2.countNonZero(fgmask)
+
+        #font = cv2.FONT_HERSHEY_SIMPLEX
+        #cv2.putText(img,'Timestamp [ {:04d} {:04d} {}]'.format(ts.cycleSeconds, ts.cycleCount,count),(20,20), font, .5,(255,255,255),1,cv2.LINE_AA)
+        #cv2.imshow('innertube',img)
+        #cv2.imshow('fgmask',fgmask)
+
+        prev_ts = ts
+        filename = ''  
+        if count > 2000:
+            filename ='{:04d}-{:04d}-{}'.format(ts.cycleSeconds, ts.cycleCount,count)
+            image.save('{}.bmp'.format(filename).encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
+            
+
         if prev_ts:
             diff = (ts.cycleSeconds - prev_ts.cycleSeconds) * 8000 + (ts.cycleCount - prev_ts.cycleCount)
-            print('Timestamp [ %d %d ] - %d' % (ts.cycleSeconds, ts.cycleCount, diff))
-        prev_ts = ts
+            print('Timestamp [ {:04d} {:04d} ] - {:03d} - {} {}'.format(ts.cycleSeconds, ts.cycleCount, diff,count,filename))
 
-    newimg = image.convert(PyCapture2.PIXEL_FORMAT.BGR)
-    print('Saving the last image to fc2TestImage.png')
-    newimg.save('fc2TestImage.png'.encode('utf-8'), PyCapture2.IMAGE_FILE_FORMAT.PNG)
 
 #
 # Example Main

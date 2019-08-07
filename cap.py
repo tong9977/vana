@@ -126,7 +126,7 @@ while 1:
 
     font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.putText(img,'Timestamp [ {:04d} {:04d} {}]'.format(ts.cycleSeconds, ts.cycleCount,count),(20,20), font, .5,(255,255,255),1,cv2.LINE_AA)
-    cv2.imshow('innertube',img)
+    #cv2.imshow('innertube',img)
     #cv2.imshow('fgmask',fgmask)
     
     if count>=80000 :
