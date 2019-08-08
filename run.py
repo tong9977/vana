@@ -17,6 +17,8 @@
 
 import PyCapture2
 import cv2
+import time
+import uuid 
 
 def print_build_info():
     lib_ver = PyCapture2.getLibraryVersion()
@@ -44,13 +46,11 @@ def enable_embedded_timestamp(cam, enable_timestamp):
         else:
             print('\nTimeStamp is disabled.\n')
 
-def grab_images(cam, num_images_to_grab):
+def grab_images(cam,threshold = 5000 ,startAt = 100):
     prev_ts = None
     fgbg = cv2.createBackgroundSubtractorMOG2()
-    #for i in range(num_images_to_grab):
-
     i = 0
-    startAt = 100
+    cap = False
     while 1:
         i=i+1
         if i > startAt:
@@ -73,15 +73,23 @@ def grab_images(cam, num_images_to_grab):
         #cv2.putText(img,'Timestamp [ {:04d} {:04d} {}]'.format(ts.cycleSeconds, ts.cycleCount,count),(20,20), font, .5,(255,255,255),1,cv2.LINE_AA)
         #cv2.imshow('innertube',img)
         #cv2.imshow('fgmask',fgmask)
+        ticks = int(time.time()*1000)
 
-        filename = ''  
-        if (count > 2000) & (i > startAt) :
-            filename ='{:04d}-{:04d}-{}'.format(ts.cycleSeconds, ts.cycleCount,count)
+          
+        
+        if (count > threshold) & (i > startAt) :
+            if cap == False :
+                setNo = uuid.uuid1().hex
+                cap = True
+            
+            filename = '{:04d}-{}-{}'.format(ticks, setNo,count)
             image.save('/vanaramdisk/{}.bmp'.format(filename).encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
+        else:
+            cap = False
             
         if prev_ts:
             diff = (ts.cycleSeconds - prev_ts.cycleSeconds) * 8000 + (ts.cycleCount - prev_ts.cycleCount)
-            print('Timestamp [ {:04d} {:04d} ] - {:03d} - {} {}'.format(ts.cycleSeconds, ts.cycleCount, diff,count,filename))
+            print('Timestamp [ {:04d} {:04d} ] - {:03d} - {} {}'.format(ticks, ts.cycleCount, diff,count,filename))
 
         prev_ts = ts
 
@@ -113,7 +121,7 @@ enable_embedded_timestamp(c, True)
 
 print('Starting image capture...')
 c.startCapture()
-grab_images(c, 1000)
+grab_images(c, 300000,300)
 c.stopCapture()
 
 # Disable camera embedded timestamp
