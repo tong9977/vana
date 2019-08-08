@@ -74,7 +74,7 @@ def grab_images(cam,threshold = 5000 ,startAt = 100):
         #cv2.imshow('innertube',img)
         #cv2.imshow('fgmask',fgmask)
         ticks = int(time.time()*1000)
-
+        filename=''
           
         
         if (count > threshold) & (i > startAt) :
