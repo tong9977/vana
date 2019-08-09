@@ -115,7 +115,7 @@ face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
 print('Starting image capture...')
 fgbg = cv2.createBackgroundSubtractorMOG2()
-mask = cv2.imread('./mask/rattler.png',0)
+mask = cv2.imread('./mask/rattler2.png',0)
 
 while 1:
     #grab_images(c, 1)
