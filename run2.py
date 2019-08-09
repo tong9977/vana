@@ -49,6 +49,7 @@ def enable_embedded_timestamp(cam, enable_timestamp):
 def grab_images(cam,threshold = 5000 ,startAt = 100):
     prev_ts = None
     fgbg = cv2.createBackgroundSubtractorMOG2()
+    mask = cv2.imread('./mask/rattler.png',0)
     i = 0
     cap = False
     while 1:
@@ -68,7 +69,6 @@ def grab_images(cam,threshold = 5000 ,startAt = 100):
         img = cv2.imread('/vanaramdisk/tmp.bmp',0)
 
 
-        mask = cv2.imread('./mask/rattler.png',0)
         img_masked = cv2.bitwise_and(img,img,mask = mask)
         
 
