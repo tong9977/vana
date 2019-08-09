@@ -52,6 +52,7 @@ def grab_images(cam,threshold = 5000 ,startAt = 100):
     mask = cv2.imread('./mask/rattler.png',0)
     i = 0
     cap = False
+    tmpNo = 0;
     while 1:
         i=i+1
         if i > startAt:
@@ -64,9 +65,14 @@ def grab_images(cam,threshold = 5000 ,startAt = 100):
             continue
         
         ts = image.getTimeStamp()
+        if tmpNo%5==0 :
+            tmpNo = 0
 
-        image.save('/vanaramdisk/tmp.bmp'.encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
-        img = cv2.imread('/vanaramdisk/tmp.bmp',0)
+        tmpName = 'tmp{}'.format(tmpNo)    
+        tmpNo = tmpNo + 1
+
+        image.save('/vanaramdisk/{}.bmp'.format(tmpName).encode('utf-8'),PyCapture2.IMAGE_FILE_FORMAT.BMP)
+        img = cv2.imread('/vanaramdisk/{}.bmp'.format(tmpName),0)
 
 
         img_masked = cv2.bitwise_and(img,img,mask = mask)
@@ -127,7 +133,7 @@ enable_embedded_timestamp(c, True)
 
 print('Starting image capture...')
 c.startCapture()
-grab_images(c, 300000,300)
+grab_images(c, 50000,300)
 c.stopCapture()
 
 # Disable camera embedded timestamp

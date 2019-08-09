@@ -115,19 +115,21 @@ face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
 print('Starting image capture...')
 fgbg = cv2.createBackgroundSubtractorMOG2()
+mask = cv2.imread('./mask/rattler.png',0)
 
 while 1:
     #grab_images(c, 1)
     img,ts,orgImage = grab(c)
 
-    
-    fgmask = fgbg.apply(img)
+    img_masked = cv2.bitwise_and(img,img,mask = mask)
+    fgmask = fgbg.apply(img_masked)
+
     count = cv2.countNonZero(fgmask)
  
     font = cv2.FONT_HERSHEY_SIMPLEX
-    cv2.putText(img,'Timestamp [ {:04d} {:04d} {}]'.format(ts.cycleSeconds, ts.cycleCount,count),(20,20), font, .5,(255,255,255),1,cv2.LINE_AA)
-    #cv2.imshow('innertube',img)
-    #cv2.imshow('fgmask',fgmask)
+    cv2.putText(img,'Timestamp [ {:04d} {:04d} {}]'.format(ts.cycleSeconds, ts.cycleCount,count),(20,200), font, 1.8,(0,0,0),1,cv2.LINE_AA)
+    cv2.imshow('innertube',img)
+    cv2.imshow('fgmask',fgmask)
     
     if count>=80000 :
         filename ='{:04d}-{:04d}.png '.format(ts.cycleSeconds, ts.cycleCount)
