@@ -1,0 +1,66 @@
+{
+  "name": "server",
+  "description": "",
+  "version": "0.0.0",
+  "homepage": "",
+  "main": "src",
+  "keywords": [
+    "feathers"
+  ],
+  "author": {
+    "name": "tong9977",
+    "email": "tong9977@gmail.com"
+  },
+  "contributors": [],
+  "bugs": {},
+  "directories": {
+    "lib": "src",
+    "test": "test/",
+    "config": "config/"
+  },
+  "engines": {
+    "node": "^10.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "scripts": {
+    "test": "npm run eslint && NODE_ENV= npm run mocha",
+    "eslint": "eslint src/. test/. --config .eslintrc.json",
+    "dev": "nodemon src/",
+    "start": "node src/",
+    "mocha": "mocha test/ --recursive --exit"
+  },
+  "dependencies": {
+    "@feathersjs/authentication": "^2.1.16",
+    "@feathersjs/authentication-jwt": "^2.0.10",
+    "@feathersjs/authentication-local": "^1.2.9",
+    "@feathersjs/configuration": "^2.0.6",
+    "@feathersjs/errors": "^3.3.6",
+    "@feathersjs/express": "^1.3.1",
+    "@feathersjs/feathers": "^3.3.1",
+    "@feathersjs/socketio": "^3.2.9",
+    "collect.js": "^4.12.2",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "date-fns": "^1.30.1",
+    "delay": "^4.2.0",
+    "feathers-blob": "^2.1.0",
+    "feathers-objection": "^2.0.1",
+    "fs-blob-store": "^5.2.1",
+    "helmet": "^3.16.0",
+    "knex": "^0.16.3",
+    "mkdirp": "^0.5.1",
+    "mssql": "^5.0.5",
+    "multer": "^1.4.1",
+    "nodemailer": "^6.1.1",
+    "objection": "^1.6.7",
+    "serve-favicon": "^2.5.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.19.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}

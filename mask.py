@@ -8,3 +8,4 @@ res = cv2.bitwise_and(img,img,mask = mask)
 cv2.imshow('innertube',res)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
