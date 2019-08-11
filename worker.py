@@ -1,6 +1,7 @@
 import cv2
 import time
 import pycurl
+from pathlib import Path
 
 def upload(filename,station,unixtime,size,setno):
     c = pycurl.Curl()
@@ -15,7 +16,7 @@ def upload(filename,station,unixtime,size,setno):
     c.perform()
     c.close()
 
-def uploadFiles(filenames,station,unixtime,size,setno):
+def uploadFiles(filenames,station,unixtime,setno,size):
     c = pycurl.Curl()
     uploadUrl = 'localhost:3030/upload'
     url =  uploadUrl + '?station={}&unixtime={}&size={}&setno={}'.format(station,unixtime,size,setno)
@@ -29,12 +30,47 @@ def uploadFiles(filenames,station,unixtime,size,setno):
     c.perform()
     c.close()
 
-img_bmp = cv2.imread('./test/innertube.bmp',1)
-cv2.imwrite('img_100.jpg', img_bmp, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
-cv2.imwrite('img_60.jpg', img_bmp, [int(cv2.IMWRITE_JPEG_QUALITY), 60])
-cv2.imwrite('img_20.jpg', img_bmp, [int(cv2.IMWRITE_JPEG_QUALITY), 20])
 
-uploadFiles(['img_100.jpg','img_60.jpg','img_20.jpg'],station='innertube',unixtime=1565553447,size='s',setno='77888555')
+def resize_to_s(bmpFiles):
+    jpgFiles =[]
+    for filename in bmpFiles:
+        img_bmp = cv2.imread(filename,1)
+        jpgFileName = Path(filename).stem + '.jpg'
+        cv2.imwrite(jpgFileName, img_bmp, [int(cv2.IMWRITE_JPEG_QUALITY), 20])
+        jpgFiles.append(jpgFileName)
+    return jpgFiles
+
+def resize_to_m(bmpFiles):
+    jpgFiles =[]
+    for filename in bmpFiles:
+        img_bmp = cv2.imread(filename,1)
+        jpgFileName = Path(filename).stem + '.jpg'
+        cv2.imwrite(jpgFileName, img_bmp, [int(cv2.IMWRITE_JPEG_QUALITY), 60])
+        jpgFiles.append(jpgFileName)
+    return jpgFiles
+
+def resize_to_l(bmpFiles):
+    jpgFiles =[]
+    for filename in bmpFiles:
+        img_bmp = cv2.imread(filename,1)
+        jpgFileName = Path(filename).stem + '.jpg'
+        cv2.imwrite(jpgFileName, img_bmp, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+        jpgFiles.append(jpgFileName)
+    return jpgFiles
 
 
+
+bmpSelected =  ['./test/innertube.bmp','./test/innertube1.bmp','./test/innertube2.bmp']
+station='innertube'
+unixtime=1565553447  
+setno='77888555' 
+    
+jpgFiles = resize_to_s(bmpSelected)
+uploadFiles(jpgFiles,station,unixtime,setno,size='s')
+
+jpgFiles = resize_to_m(bmpSelected)
+uploadFiles(jpgFiles,station,unixtime,setno,size='m')
+
+jpgFiles = resize_to_l(bmpSelected)
+uploadFiles(jpgFiles,station,unixtime,setno,size='l')
 
