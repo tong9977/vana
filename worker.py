@@ -58,6 +58,17 @@ def resize_to_l(bmpFiles):
         jpgFiles.append(jpgFileName)
     return jpgFiles
 
+def resize_and_upload(bmpFiles,station,unixtime,setno):
+    jpgFiles = resize_to_s(bmpFiles)
+    uploadFiles(jpgFiles,station,unixtime,setno,size='s')
+    
+    jpgFiles = resize_to_m(bmpFiles)
+    uploadFiles(jpgFiles,station,unixtime,setno,size='m')
+    
+    jpgFiles = resize_to_l(bmpFiles)
+    uploadFiles(jpgFiles,station,unixtime,setno,size='l')
+    
+
 
 
 bmpSelected =  ['./test/innertube.bmp','./test/innertube1.bmp','./test/innertube2.bmp']
@@ -65,12 +76,5 @@ station='innertube'
 unixtime=1565553447  
 setno='77888555' 
     
-jpgFiles = resize_to_s(bmpSelected)
-uploadFiles(jpgFiles,station,unixtime,setno,size='s')
 
-jpgFiles = resize_to_m(bmpSelected)
-uploadFiles(jpgFiles,station,unixtime,setno,size='m')
-
-jpgFiles = resize_to_l(bmpSelected)
-uploadFiles(jpgFiles,station,unixtime,setno,size='l')
-
+resize_and_upload(bmpSelected,station,unixtime,setno)
