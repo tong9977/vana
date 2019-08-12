@@ -1,8 +1,11 @@
 sudo mkdir /vanaramdisk
 sudo mount -t tmpfs -o rw,size=2G tmpfs /vanaramdisk
 
+sudo mkdir /tmpramdisk
+sudo mount -t tmpfs -o rw,size=1G tmpfs /tmpramdisk
 
 sudo umount /vanaramdisk
+sudo umount /tmpramdisk
 
 
 sudo sysctl -w net.core.rmem_default=31457280
@@ -16,7 +19,8 @@ pip3 install opencv-python
 pip3 install opencv-contrib-python
 
 pip3 install pycurl
-
+pip3 install glob
+pip install pandas
 
 vscode 
 "python.linting.pylintArgs": ["--extension-pkg-whitelist=cv2"],
