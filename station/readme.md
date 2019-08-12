@@ -20,7 +20,7 @@ pip3 install opencv-contrib-python
 
 pip3 install pycurl
 pip3 install glob
-pip install pandas
+pip3 install twisted[tls]
 
 vscode 
 "python.linting.pylintArgs": ["--extension-pkg-whitelist=cv2"],
