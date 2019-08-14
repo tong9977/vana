@@ -113,6 +113,7 @@ class Worker:
         return selected        
     
     def exec(self):
+        print('{} worker exec {}'.format(self.station,self.uploadUrl))
         photos = self.__get_first_set();
         if len(photos) > 0:
             self.__print_list(photos)
