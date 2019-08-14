@@ -112,7 +112,7 @@ enable_embedded_timestamp(c, True)
 
 print('Starting image capture...')
 c.startCapture()
-grab_images(c, 50000,300,'./mask/rattler2.png')
+grab_images(c, 300000,300,'./mask/white.jpg')
 c.stopCapture()
 
 # Disable camera embedded timestamp

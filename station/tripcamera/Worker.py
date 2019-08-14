@@ -101,7 +101,14 @@ class Worker:
     
         print(count_max_idx)        
         selected = []
-        for i in range(count_max_idx-number+1, count_max_idx+1):
+        
+        start=count_max_idx-number+1
+        if start <= 0:
+            start = 0
+
+        end = count_max_idx+1
+
+        for i in range(start, end):
             selected.append(photos[i])
         return selected        
     
