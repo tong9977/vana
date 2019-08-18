@@ -1,7 +1,7 @@
-// Initializes the `photo` service on path `/photo`
+// Initializes the `scandata` service on path `/scandata`
 const createService = require('feathers-objection');
-const createModel = require('../../models/photo.model');
-const hooks = require('./photo.hooks');
+const createModel = require('../../models/scandata.model');
+const hooks = require('./scandata.hooks');
 
 module.exports = function (app) {
   const Model = createModel(app);
@@ -14,10 +14,10 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/photo', createService(options));
+  app.use('/scandata', createService(options));
 
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('photo');
+  const service = app.service('scandata');
 
   service.hooks(hooks);
 };

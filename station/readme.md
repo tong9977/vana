@@ -37,3 +37,10 @@ nvm use v10.16.2
 
 npm install -g @feathersjs/cli
 feathers generate app
+sudo apt-get install gdebi
+wget http://github.com/angryziber/ipscan/releases/download/3.3.3/ipscan_3.3.3_amd64.deb
+
+
+ssh root@192.168.111.111
+fa
+
