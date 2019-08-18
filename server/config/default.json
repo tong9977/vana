@@ -1,7 +1,7 @@
 {
   "host": "localhost",
   "port": 3030,
-  "baseUploadUrl": "http://localhost:3030/uploads/",
+  "baseUploadUrl": "http://192.168.111.19:3030/uploads/",
   "public": "../public/",
   "paginate": {
     "default": 2000,
@@ -36,5 +36,5 @@
     }
   },
   "uploadStoragePath": "public/uploads",
-  "uploadResources": "http://localhost:3030/uploads/"
+  "uploadResources": "http://192.168.111.19:3030/uploads/"
 }

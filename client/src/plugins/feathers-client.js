@@ -9,7 +9,7 @@ import { FeathersVuexFind, FeathersVuexGet } from 'feathers-vuex'
 
 
 //const url = process.env.VUE_APP_SERVER_API
-const url = "http://localhost:3030/"
+const url = "http://192.168.111.19:3030/"
 console.log(url)
 const socket = io(url, {transports: ['websocket']})
 
