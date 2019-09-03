@@ -44,3 +44,16 @@ wget http://github.com/angryziber/ipscan/releases/download/3.3.3/ipscan_3.3.3_am
 ssh root@192.168.111.111
 fa
 
+//raspberry pi
+sudo wget -O /usr/local/bin/rmate https://raw.github.com/aurora/rmate/master/rmate$
+sudo chmod a+x /usr/local/bin/rmate
+
+// vscode
+open up the command palette (CTRL+P for Windows and CMD+P for Mac) then execute the >Remote: Start Server command.
+
+ssh -R 52698:localhost:52698 root@192.168.111.108
+
+
+//NAS 192.168.111.3
+Administrator
+Monstermedia@vana
