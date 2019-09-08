@@ -96,6 +96,7 @@ def main():
     response = connection.getresponse()
     resposeJson = response.read().decode()
     lcd_string(resposeJson,LCD_LINE_4)
+    print(resposeJson)
     connection.close()
 
 
