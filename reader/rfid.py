@@ -81,8 +81,7 @@ def main():
 
   # Initialise display
   lcd_init()
-  station = "Innertube"
-  StationId = 1
+  station = "innertube"
   while True: 
     lcd_string(station,LCD_LINE_1)
     lcd_string("Scan RFID",LCD_LINE_2)
@@ -91,7 +90,7 @@ def main():
     connection = http.client.HTTPConnection("192.168.1.101:3030")
     #connection = http.client.HTTPConnection("192.168.111.19:3030")
     headers = {'Content-type':'application/json'}
-    scandata = {'TagNo':rfid,'StationId':StationId}
+    scandata = {'TagNo':rfid,'Station':station}
     json_scandata = json.dumps(scandata)
     connection.request("POST", "/scandata",json_scandata,headers)
     response = connection.getresponse()
