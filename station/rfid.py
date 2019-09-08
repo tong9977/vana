@@ -8,7 +8,7 @@ while True:
     #rfid = input("My RFID: ") 
     rfid = "Test5"
     print(rfid)
-    connection = http.client.HTTPConnection("192.168.1.102:3030")
+    connection = http.client.HTTPConnection("192.168.1.101:3030")
     #connection = http.client.HTTPConnection("192.168.111.19:3030")
     headers = {'Content-type':'application/json'}
     scandata = {'TagNo':rfid,'StationId':1}
