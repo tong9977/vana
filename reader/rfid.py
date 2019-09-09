@@ -8,7 +8,8 @@ import os
 import string
 
 # Define some device parameters
-I2C_ADDR  = 0x27 # I2C device address
+#I2C_ADDR  = 0x27 # I2C device address
+I2C_ADDR  = 0x3f# I2C device address
 LCD_WIDTH = 16   # Maximum characters per line
 
 # Define some device constants
@@ -86,29 +87,69 @@ def getIP():
   os.system('sudo rm ip.text')
   return myip
 
+def checkIp():
+  myip = ''
+  count = 0
+  while len(myip) < 5:
+    myip = getIP()
+    print('my-ip: ' + myip)
+    count = count +1
+    lcd_string('CheckIP: ' + str(count),LCD_LINE_1)
+    lcd_string("",LCD_LINE_2)
+    lcd_string("",LCD_LINE_4)
+    lcd_string("",LCD_LINE_3)
+    time.sleep(2)
+
+  return myip.split()[0]
+
+def displayReadyToScan(myip,station):
+  lcd_string("READY TO SCAN",LCD_LINE_1)
+  lcd_string("",LCD_LINE_2)
+  lcd_string(station,LCD_LINE_3)
+  lcd_string(myip,LCD_LINE_4)
+
+def displayWaiting():
+  lcd_string("WAIT !!!",LCD_LINE_1)
+  lcd_string("",LCD_LINE_2)
+  lcd_string("",LCD_LINE_3)
+  lcd_string("",LCD_LINE_4)
+
+def displayOK(rfid):
+  lcd_string("OK",LCD_LINE_1)
+  lcd_string("",LCD_LINE_2)
+  lcd_string("TagNo",LCD_LINE_3)
+  lcd_string(rfid,LCD_LINE_4)
+
+
 def main():
   # Main program block
-  myip = getIP()
-  print(myip)
   # Initialise display
   lcd_init()
+  myip=checkIp()
+  print(myip)
   station = "innertube"
   while True: 
-    lcd_string(station +" RFID",LCD_LINE_1)
-    lcd_string(myip,LCD_LINE_2)
-    rfid = input("My RFID: ")
-    lcd_string(rfid,LCD_LINE_3)
-    #connection = http.client.HTTPConnection("192.168.1.101:3030")
-    connection = http.client.HTTPConnection("192.168.111.19:3030")
+    displayReadyToScan(myip,station)
+    rfid = input("SCAN RFID: ")
+
+    displayOK(rfid)
+    time.sleep(3)
+    
+    connection = http.client.HTTPConnection("192.168.1.102:3030")
+    #connection = http.client.HTTPConnection("192.168.111.19:3030")
     headers = {'Content-type':'application/json'}
     scandata = {'TagNo':rfid,'Station':station}
     json_scandata = json.dumps(scandata)
     connection.request("POST", "/scandata",json_scandata,headers)
     response = connection.getresponse()
     resposeJson = response.read().decode()
+    displayWaiting()
     lcd_string(resposeJson,LCD_LINE_4)
     print(resposeJson)
     connection.close()
+
+    time.sleep(10)
+    #myip=checkIp()
 
 
 if __name__ == '__main__':
