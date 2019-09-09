@@ -14,6 +14,7 @@ class scandata extends Model {
   $beforeInsert() {
     this.ScanTime = new Date().toISOString();
     this.Unixtime = (+new Date())/1000;
+    this.SetNo='';
   }
 
 }
