@@ -4,8 +4,6 @@ import http.client
 import json
 import time
 import smbus
-import os
-import string
 
 # Define some device parameters
 I2C_ADDR  = 0x27 # I2C device address
@@ -78,24 +76,15 @@ def lcd_string(message,line):
   for i in range(LCD_WIDTH):
     lcd_byte(ord(message[i]),LCD_CHR)
 
-def getIP():
-  os.system("hostname -I>>ip.text")
-  f = open('ip.text', 'r')
-  myip = f.read()
-  f.close()
-  os.system('sudo rm ip.text')
-  return myip
-
 def main():
   # Main program block
-  myip = getIP()
-  print(myip)
+
   # Initialise display
   lcd_init()
   station = "innertube"
   while True: 
-    lcd_string(station +" RFID",LCD_LINE_1)
-    lcd_string(myip,LCD_LINE_2)
+    lcd_string(station,LCD_LINE_1)
+    lcd_string("Scan RFID",LCD_LINE_2)
     rfid = input("My RFID: ")
     lcd_string(rfid,LCD_LINE_3)
     #connection = http.client.HTTPConnection("192.168.1.101:3030")
@@ -118,5 +107,4 @@ if __name__ == '__main__':
   except KeyboardInterrupt:
     pass
   finally:
-    pass
     lcd_byte(0x01, LCD_CMD)
