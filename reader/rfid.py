@@ -8,8 +8,8 @@ import os
 import string
 
 # Define some device parameters
-#I2C_ADDR  = 0x27 # I2C device address
-I2C_ADDR  = 0x3f# I2C device address
+I2C_ADDR  = 0x27 # I2C device address
+#I2C_ADDR  = 0x3f# I2C device address
 LCD_WIDTH = 16   # Maximum characters per line
 
 # Define some device constants
@@ -135,8 +135,8 @@ def main():
     displayOK(rfid)
     time.sleep(3)
     
-    connection = http.client.HTTPConnection("192.168.1.102:3030")
-    #connection = http.client.HTTPConnection("192.168.111.19:3030")
+    #connection = http.client.HTTPConnection("192.168.1.102:3030")
+    connection = http.client.HTTPConnection("192.168.111.19:3030")
     headers = {'Content-type':'application/json'}
     scandata = {'TagNo':rfid,'Station':station}
     json_scandata = json.dumps(scandata)
@@ -148,7 +148,7 @@ def main():
     print(resposeJson)
     connection.close()
 
-    time.sleep(10)
+    time.sleep(15)
     #myip=checkIp()
 
 
