@@ -44,24 +44,56 @@ const upload = multer({
 const savetodb = async (req, res, next) => {
   const baseUploadUrl = app.get('uploadResources');
 
-  var unixtimestamp = parseInt(req.query.unixtime);
+  var takenUnixTime = parseInt(req.query.unixtime);
   var station = req.query.station;
   var size = req.query.size;
   var setno = req.query.setno;
-  var date = new Date(unixtimestamp * 1000);
+  var takendate = new Date(takenUnixTime * 1000);
 
   let files = req.files;
   const photo = require('../models/photo.model')();
+  const scandata = require('../models/scandata.model')();
+
+  var rfidString = '';
+
+  if (size == 's') {
+    // size s หา rfid โดยการดูจากเวลา scandata ว่ามีการ  scan ก่อนถ่าย 1 นาทีหรือไม่ และ SetNo ต้องเป็นค่าว่างด้วย   
+    const owner_scandata = await scandata.query()
+      .where('UnixTime', '<', takenUnixTime)
+      .where('UnixTime', '>', takenUnixTime - 60)
+      .where('SetNo', '=', '')
+
+    if (owner_scandata.length > 0) {
+      console.log(owner_scandata);
+
+      rfidString = owner_scandata[0].TagNo;
+      //เจอแล้ว ให้เอา SetNo ขาก Photo ไปใส่ใน scandata ที่เจอเพื่อบอกว่า scandata นี้เจอรูปแล้ว
+      const candataUpdated = await scandata.query()
+        .findById(owner_scandata[0].Id)
+        .patch({
+          SetNo: setno,
+          TakenUnixTime: takenUnixTime
+        })
+
+    }
+
+  } else {
+    // size m l 
+    // เอา rfid จาก scandata จาก SetNo ที่ตรงกันกับ Photo ที่ส่งมา
+
+  }
+
 
   files.forEach(async (item) => {
     var newphoto = await photo.query().insert({
       Station: station,
       SetNo: setno,
-      Unixtime: unixtimestamp,
-      TakenTime: date.toISOString(),
+      Unixtime: takenUnixTime,
+      TakenTime: takendate.toISOString(),
       Size: size,
       Url: baseUploadUrl + item.path.replace('public/uploads/', ''),
-      LocalPath: item.path
+      LocalPath: item.path,
+      RFIDString: rfidString
     });
   });
 
