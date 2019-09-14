@@ -61,7 +61,7 @@ const savetodb = async (req, res, next) => {
     const owner_scandata = await scandata.query()
       .where('UnixTime', '<', takenUnixTime)
       .where('UnixTime', '>', takenUnixTime - 60)
-      .where('Station','=',station)
+      .where('Station', '=', station)
       .where('SetNo', '=', '')
 
     if (owner_scandata.length > 0) {
@@ -69,13 +69,15 @@ const savetodb = async (req, res, next) => {
 
       rfidString = owner_scandata[0].TagNo;
       //เจอแล้ว ให้เอา SetNo ขาก Photo ไปใส่ใน scandata ที่เจอเพื่อบอกว่า scandata นี้เจอรูปแล้ว
-      const candataUpdated = await scandata.query()
-        .findById(owner_scandata[0].Id)
-        .patch({
-          SetNo: setno,
-          TakenUnixTime: takenUnixTime
-        })
 
+      for (var i = 0; i < owner_scandata.length; i++) {
+        const candataUpdated = await scandata.query()
+          .findById(owner_scandata[i].Id)
+          .patch({
+            SetNo: setno,
+            TakenUnixTime: takenUnixTime
+          })
+      }
     }
 
   } else {
