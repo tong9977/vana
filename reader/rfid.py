@@ -143,13 +143,14 @@ def main():
     connection.request("POST", "/scandata",json_scandata,headers)
     response = connection.getresponse()
     resposeJson = response.read().decode()
+    
+
     displayWaiting()
     lcd_string(resposeJson,LCD_LINE_4)
     print(resposeJson)
     connection.close()
 
     time.sleep(15)
-    #myip=checkIp()
 
 
 if __name__ == '__main__':
