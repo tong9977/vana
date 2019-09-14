@@ -10,7 +10,12 @@ class Service {
     const cmd = id
 
     if (cmd == "IsTaken") {
-      const result = this.execIsTaken(data);
+      const result = this.IsTaken(data);
+      return result
+    }
+
+    if (cmd == "ClearScanData") {
+      const result = this.ClearScanData(data);
       return result
     }
 
@@ -18,7 +23,7 @@ class Service {
 
   }
 
-  async execIsTaken(data) {
+  async IsTaken(data) {
     const Station = data.Station;
     const ScanUnixtime = data.ScanUnixtime;
 
@@ -34,6 +39,9 @@ class Service {
     } else {
       return { Taken: false };
     }
+  }
+  async ClearScanData(data) {
+    return {}
   }
 }
 

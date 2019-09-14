@@ -13,19 +13,21 @@ def cameraIsTaken(station,scanUnixtime,connection):
     connection.request("PATCH", "/camera/IsTaken",json_params,headers)
     response = connection.getresponse()
     resposeJson = response.read().decode()
-    print(resposeJson)
-    return False
-
+    dict = json.loads(resposeJson)
+    print(dict)
+    return dict['Taken']
 
 def main():
 
+
+    ####
     count = 0
     taken = False
     timeout = 10
     connection = http.client.HTTPConnection("localhost:3030")
 
     while (not taken) and (count < timeout)  :
-        taken = cameraIsTaken('innertube2',1568104025,connection)
+        taken = cameraIsTaken('innertube',1568104025,connection)
         time.sleep(1)
         count = count + 1
     
@@ -34,10 +36,6 @@ def main():
     
     if taken :
         print('Got Photo')
-
-
-    
-
 
 
 if __name__ == '__main__':
