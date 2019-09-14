@@ -67,7 +67,9 @@ const savetodb = async (req, res, next) => {
     if (owner_scandata.length > 0) {
       console.log(owner_scandata);
 
-      rfidString = owner_scandata[0].TagNo;
+      array_tagno = owner_scandata.map(o=> {return o.TagNo})
+      
+      rfidString = array_tagno.join();
       //เจอแล้ว ให้เอา SetNo ขาก Photo ไปใส่ใน scandata ที่เจอเพื่อบอกว่า scandata นี้เจอรูปแล้ว
 
       for (var i = 0; i < owner_scandata.length; i++) {
