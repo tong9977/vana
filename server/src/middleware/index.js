@@ -61,6 +61,7 @@ const savetodb = async (req, res, next) => {
     const owner_scandata = await scandata.query()
       .where('UnixTime', '<', takenUnixTime)
       .where('UnixTime', '>', takenUnixTime - 60)
+      .where('Station','=',station)
       .where('SetNo', '=', '')
 
     if (owner_scandata.length > 0) {

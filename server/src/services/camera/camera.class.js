@@ -19,6 +19,11 @@ class Service {
       return result
     }
 
+    if (cmd == "RFIDWaitInQueue") {
+      const result = this.RFIDWaitInQueue(data);
+      return result
+    }
+
     return new NotFound('Command Not Found');
 
   }
@@ -42,6 +47,19 @@ class Service {
   }
   async ClearScanData(data) {
     return {}
+  }
+  async RFIDWaitInQueue(data) {
+    const scandata = require('../../models/scandata.model')();
+    const now = (+new Date())/1000;
+    const station = data.Station
+    
+    const rfidInQueue = await scandata.query()
+      .where('UnixTime', '<', now)
+      .where('UnixTime', '>', now - 60)
+      .where('Station', '=', station)
+      .where('SetNo', '=', '')
+
+    return { RFIDWaitInQueue: rfidInQueue.length }
   }
 }
 
