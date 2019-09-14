@@ -165,11 +165,9 @@ def waitForCamera(station,scan_time,connection):
     if not taken :
         lcd_string('Time Out!!',LCD_LINE_4)
         print('Time Out!!')
-    
-    time.sleep(2)
-
 
 def RFIDWaitInQueue(station,connection):
+    
     return 1
 
 
@@ -203,6 +201,9 @@ def main():
       waitForCamera(station,scan_time,connection)
 
     connection.close()
+
+    time.sleep(2)
+
 
 
 
