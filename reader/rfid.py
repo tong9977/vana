@@ -150,7 +150,7 @@ def waitForCamera(station,scan_time,connection):
     lcd_string(str(scan_time),LCD_LINE_2)
     count = 0
     taken = False
-    timeout = 10
+    timeout = 60
 
     while (not taken) and (count < timeout)  :
         taken = cameraIsTaken(station,scan_time,connection)
@@ -167,9 +167,15 @@ def waitForCamera(station,scan_time,connection):
         print('Time Out!!')
 
 def RFIDWaitInQueue(station,connection):
-    
-    return 1
-
+    headers = {'Content-type':'application/json'}
+    params = {'Station':station}
+    json_params = json.dumps(params)
+    connection.request("PATCH", "/camera/RFIDWaitInQueue",json_params,headers)
+    response = connection.getresponse()
+    resposeJson = response.read().decode()
+    dict = json.loads(resposeJson)
+    print(dict)
+    return dict['RFIDWaitInQueue']
 
 def main():
   # Main program block
