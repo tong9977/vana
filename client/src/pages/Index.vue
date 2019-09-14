@@ -41,7 +41,7 @@
       <div class="col-6 col-md-4" v-for="item in items" :key="item">
         <q-img :src="item.Url" style="width: 100%">
           <div class="absolute-bottom  ">
-            <span class="text-subtitle1 text-left"><q-icon name="access_time" />  {{item.TakenTime |fulldatetime}} </span> <span class="q-pl-md text-subtitle1 ">RFID : 0</span>
+            <span class="text-subtitle1 text-left"><q-icon name="access_time" />  {{item.TakenTime |fulldatetime}} </span> <span class="q-pl-md text-subtitle1 ">{{item.RFIDString}}</span>
           </div>
         </q-img>
       </div>
