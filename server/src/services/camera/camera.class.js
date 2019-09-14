@@ -9,20 +9,9 @@ class Service {
   async patch(id, data, params) {
     const cmd = id
 
-    if (cmd == "IsTaken") {
-      const result = this.IsTaken(data);
-      return result
-    }
-
-    if (cmd == "ClearScanData") {
-      const result = this.ClearScanData(data);
-      return result
-    }
-
-    if (cmd == "RFIDWaitInQueue") {
-      const result = this.RFIDWaitInQueue(data);
-      return result
-    }
+    if (cmd == "IsTaken") { return this.IsTaken(data); }
+    if (cmd == "ClearScanData") { return this.ClearScanData(data); }
+    if (cmd == "RFIDWaitInQueue") { return this.RFIDWaitInQueue(data); }
 
     return new NotFound('Command Not Found');
 
@@ -50,9 +39,9 @@ class Service {
   }
   async RFIDWaitInQueue(data) {
     const scandata = require('../../models/scandata.model')();
-    const now = (+new Date())/1000;
+    const now = (+new Date()) / 1000;
     const station = data.Station
-    
+
     const rfidInQueue = await scandata.query()
       .where('UnixTime', '<', now)
       .where('UnixTime', '>', now - 60)
