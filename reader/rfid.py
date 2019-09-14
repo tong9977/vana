@@ -114,11 +114,60 @@ def displayWaiting():
   lcd_string("",LCD_LINE_3)
   lcd_string("",LCD_LINE_4)
 
-def displayOK(rfid):
-  lcd_string("OK",LCD_LINE_1)
-  lcd_string("",LCD_LINE_2)
-  lcd_string("TagNo",LCD_LINE_3)
-  lcd_string(rfid,LCD_LINE_4)
+def displayOK(tagno,scanno,maxscan,scan_time):
+  lcd_string(tagno,LCD_LINE_1)
+  lcd_string(str(scanno)+'/'+str(maxscan),LCD_LINE_2)
+  lcd_string("",LCD_LINE_3)
+  lcd_string(str(scan_time),LCD_LINE_4)
+  print(tagno + ' ' + str(scanno) +'/'+ str(maxscan)  + ' '+ str(scan_time))
+
+def cameraIsTaken(station,scanUnixtime,connection):
+    headers = {'Content-type':'application/json'}
+    params = {'ScanUnixtime':scanUnixtime,'Station':station}
+    json_params = json.dumps(params)
+    connection.request("PATCH", "/camera/IsTaken",json_params,headers)
+    response = connection.getresponse()
+    resposeJson = response.read().decode()
+    dict = json.loads(resposeJson)
+    print(dict)
+    return dict['Taken']
+
+def sendRFID(rfid,station,connection):
+    headers = {'Content-type':'application/json'}
+    scandata = {'TagNo':rfid,'Station':station}
+    json_scandata = json.dumps(scandata)
+    connection.request("POST", "/scandata",json_scandata,headers)
+    response = connection.getresponse()
+    resposeJson = response.read().decode()
+    print(resposeJson)
+
+    dict = json.loads(resposeJson)
+    return dict['TagNo'],dict['Unixtime']
+
+
+def waitForCamera(station,scan_time,connection):
+    displayWaiting()
+    lcd_string(str(scan_time),LCD_LINE_2)
+    count = 0
+    taken = False
+    timeout = 10
+
+    while (not taken) and (count < timeout)  :
+        taken = cameraIsTaken(station,scan_time,connection)
+        time.sleep(1)
+        count = count + 1
+        lcd_string(str(count),LCD_LINE_4)
+    
+    if taken :
+        lcd_string('Got Photo',LCD_LINE_4)
+        print('Got Photo')
+
+    if not taken :
+        lcd_string('Time Out!!',LCD_LINE_4)
+        print('Time Out!!')
+
+def RFIDWaitInQueue(station,connection):
+    return 1
 
 
 def main():
@@ -128,29 +177,33 @@ def main():
   myip=checkIp()
   print(myip)
   station = "innertube"
+  maxscan=2
+  scanno=0
   while True: 
-    displayReadyToScan(myip,station)
-    rfid = input("SCAN RFID: ")
 
-    displayOK(rfid)
-    time.sleep(3)
-    
     #connection = http.client.HTTPConnection("192.168.1.102:3030")
     connection = http.client.HTTPConnection("192.168.111.19:3030")
-    headers = {'Content-type':'application/json'}
-    scandata = {'TagNo':rfid,'Station':station}
-    json_scandata = json.dumps(scandata)
-    connection.request("POST", "/scandata",json_scandata,headers)
-    response = connection.getresponse()
-    resposeJson = response.read().decode()
-    
+    # scan 1
+    displayReadyToScan(myip,station)
+    rfid = input("SCAN RFID: ")
+    scanno = scanno+1
+    tagno,scan_time =sendRFID(rfid,station,connection)
 
-    displayWaiting()
-    lcd_string(resposeJson,LCD_LINE_4)
-    print(resposeJson)
+    myqueue = RFIDWaitInQueue(station,connection) 
+
+    if myqueue <= maxscan: 
+      displayOK(tagno,scanno,maxscan,scan_time)
+
+
+    if myqueue >= maxscan: 
+      scanno = 0
+      waitForCamera(station,scan_time,connection)
+
     connection.close()
 
-    time.sleep(15)
+    time.sleep(2)
+
+
 
 
 if __name__ == '__main__':
